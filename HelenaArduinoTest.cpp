@@ -287,13 +287,7 @@ void aci_loop()
         aci_state.data_credit_available = aci_state.data_credit_total;
         timing_change_done = false;
        Serial.println(F("ACI_EVT_CONNECTED "));
-//        Serial.println(aci_state.data_credit_available, DEC);
-        Serial.print(F("Connection interval: "));
-        Serial.print(aci_evt->params.timing.conn_rf_interval * 1.25*100, DEC);
-        Serial.println(F(" ms"));
-        Serial.print(F("aci_state.connection_interval: "));
-        Serial.print(aci_state.connection_interval, DEC);
-        lib_aci_change_timing(800,800,0,500);
+
         break;
 
 
