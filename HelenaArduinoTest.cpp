@@ -2,10 +2,13 @@
 #include "HelenaArduinoTest.h"
 
 
+
+#include <Arduino.h>
 #include <SPI.h>
 #include "services.h"
 #include <lib_aci.h>
 #include <aci_setup.h>
+#include <ByteBuffer.h>
 
 static services_pipe_type_mapping_t
         services_pipe_type_mapping[NUMBER_OF_PIPES] = SERVICES_PIPE_TYPE_MAPPING_CONTENT;
