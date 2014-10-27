@@ -10,26 +10,9 @@
 static services_pipe_type_mapping_t
         services_pipe_type_mapping[NUMBER_OF_PIPES] = SERVICES_PIPE_TYPE_MAPPING_CONTENT;
 
-/////
-// service 6660
-// char 6666
-////
 
-/*
-Store the nRF8001 setup information generated on the flash of the AVR.
-This reduces the RAM requirements for the nRF8001.
-*/
 static hal_aci_data_t setup_msgs[NB_SETUP_MESSAGES] PROGMEM = SETUP_MESSAGES_CONTENT;
-// an aci_struct that will contain
-// total initial credits
-// current credit
-// current state of the aci (setup/standby/active/sleep)
-// open remote pipe pending
-// close remote pipe pending
-// Current pipe available bitmap
-// Current pipe closed bitmap
-// Current connection interval, slave latency and link supervision timeout
-// Current State of the the GATT client (Service Discovery)
+
 static aci_state_t aci_state;
 
 static hal_aci_evt_t aci_data;
@@ -84,30 +67,30 @@ void Timer1stop()
 }
 
 
-typedef struct ThatDevicePacket {
-	uint8_t thisDevice[6];
-	uint8_t thatDevice[6];
-	unsigned long time;
+
+typedef struct ObservationPacket {
+	uint8_t observer[6];
+	uint8_t observedMAC[6];
+	uint16_t observedManufactor;
+	uint32_t time;
 };
-
-
 
 void randomNum(void)
 {
 	 if (lib_aci_is_pipe_available(&aci_state, PIPE_SEENDEVICE_THATDEVICE_TX) )
 	        {
-			ThatDevicePacket dvp = {
+		 ObservationPacket dvp = {
 					{242,208,13,58,14,181},
 					{(uint8_t)random(0,6)},
+					(uint16_t)random(0,400),
 					millis()
 			};
 			lib_aci_send_data(PIPE_SEENDEVICE_THATDEVICE_TX, (uint8_t*) &dvp,
-						sizeof(ThatDevicePacket));
-			Serial.println(F("Sending" ));
+						sizeof(ObservationPacket));
+
 
 			aci_state.data_credit_available--;
 			}
-
 }
 
 /*** FUNC
@@ -138,8 +121,6 @@ void __ble_assert(const char *file, uint16_t line)
 void setup(void)
 {
   Serial.begin(115200);
-
-  Serial.println(F("Arduino setup: Glucose measurement"));
 
   /**
   Point ACI data structures to the the setup data that the nRFgo studio generated for the nRF8001
@@ -234,6 +215,7 @@ void aci_loop()
 
       case ACI_EVT_CMD_RSP:
         //If an ACI command response event comes with an error -> stop
+    	  aci_state.data_credit_available++;
         if (ACI_STATUS_SUCCESS != aci_evt->params.cmd_rsp.cmd_status )
         {
             //ACI ReadDynamicData and ACI WriteDynamicData will have status codes of

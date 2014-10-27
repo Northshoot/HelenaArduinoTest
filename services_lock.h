@@ -44,11 +44,11 @@
 
 #define SETUP_ID 0
 #define SETUP_FORMAT 3 /** nRF8001 D */
-#define ACI_DYNAMIC_DATA_SIZE 130
+#define ACI_DYNAMIC_DATA_SIZE 133
 
 /* Service: SeenDevice - Characteristic: ThatDevice - Pipe: TX */
 #define PIPE_SEENDEVICE_THATDEVICE_TX          1
-#define PIPE_SEENDEVICE_THATDEVICE_TX_MAX_SIZE 16
+#define PIPE_SEENDEVICE_THATDEVICE_TX_MAX_SIZE 19
 
 
 #define NUMBER_OF_PIPES 1
@@ -61,25 +61,6 @@
 #define GAP_PPCP_MIN_CONN_INT  0xffff /**< Minimum connection interval as a multiple of 1.25 msec , 0xFFFF means no specific value requested */
 #define GAP_PPCP_SLAVE_LATENCY 0
 #define GAP_PPCP_CONN_TIMEOUT 0xffff /** Connection Supervision timeout multiplier as a multiple of 10msec, 0xFFFF means no specific value requested */
-
-/** @brief send a new value for PIPE_SEENDEVICE_THATDEVICE_TX
- *  @param src source buffer to send data from
- *  @param size the number of bytes to send. Maximum size is 16
- *  @param is_freshest_sample set it to true if you want to overwrite an eventual pending transaction on this pipe.
- *  @details use this function to send a new value for PIPE_SEENDEVICE_THATDEVICE_TX. If no transaction are currently
- *  running, the send will be immediate, otherwise, it will be done at the end of the current transaction
- *  when services_update_pipes will be called. If a transaction on this pipe is already pending, then this function
- *  will not overwrite the data of the previous transaction and return false.
- *  @return : true if is_freshest_sample true, otherwise return false if a transaction on this pipe is already pending, true otherwise.
- */
-bool services_send_seendevice_thatdevice(void *src, int size, bool is_freshest_sample);
-
-/** @brief function to trig pending transaction on pipes
- *  @details This function check for each pipe if it has a pending transaction (send/rx_request/ack)
- *   and if so executes this transaction.
- *   This function should be called in the APP_RUN state of the process function of the application.
- */
-void services_update_pipes(void);
 
 #define NB_SETUP_MESSAGES 15
 #define SETUP_MESSAGES_CONTENT {\
@@ -143,13 +124,14 @@ void services_update_pipes(void);
     },\
     {0x00,\
         {\
-            0x1f,0x06,0x20,0x8c,0x01,0x10,0x0b,0x00,0x03,0x20,0x16,0x00,0x11,0x10,0x00,0x0b,0x20,0x03,0x01,0x00,\
+            0x1f,0x06,0x20,0x8c,0x01,0x10,0x0b,0x00,0x03,0x20,0x16,0x00,0x14,0x13,0x00,0x0b,0x20,0x03,0x01,0x00,\
             0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,\
         },\
     },\
     {0x00,\
         {\
-            0x12,0x06,0x20,0xa8,0x00,0x00,0x00,0x46,0x14,0x03,0x02,0x00,0x0c,0x29,0x02,0x01,0x00,0x00,0x00,\
+            0x15,0x06,0x20,0xa8,0x00,0x00,0x00,0x00,0x00,0x00,0x46,0x14,0x03,0x02,0x00,0x0c,0x29,0x02,0x01,0x00,\
+            0x00,0x00,\
         },\
     },\
     {0x00,\
@@ -164,7 +146,7 @@ void services_update_pipes(void);
     },\
     {0x00,\
         {\
-            0x06,0x06,0xf0,0x00,0x83,0x25,0x14,\
+            0x06,0x06,0xf0,0x00,0x83,0x30,0xdd,\
         },\
     },\
 }

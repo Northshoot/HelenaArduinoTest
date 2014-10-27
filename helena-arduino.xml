@@ -11,7 +11,7 @@
             <Uuid>2003</Uuid>
             <DefaultValue></DefaultValue>
             <UsePresentationFormat>0</UsePresentationFormat>
-            <MaxDataLength>16</MaxDataLength>
+            <MaxDataLength>19</MaxDataLength>
             <AttributeLenType>1</AttributeLenType>
             <ForceOpen>false</ForceOpen>
             <Properties>
