@@ -8,7 +8,7 @@
 #include "Arduino.h"
 #include "buffer_h.h"
 
-void init(unsigned int buf_size){
+void init_buffer(unsigned int buf_size){
 	data = (byte*)malloc(sizeof(byte)*buf_size);
 	capacity = buf_size;
 	position = 0;
@@ -56,6 +56,9 @@ int put(byte in){
 	return 1;
 }
 
+uint8_t getSize(){
+	return current_size;
+}
 int putInFront(byte in){
 	if(current_size < capacity){
 		// save data byte at end of buffer

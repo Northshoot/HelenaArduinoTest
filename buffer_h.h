@@ -1,12 +1,10 @@
+#pragma once
 
-#ifndef buffer_h
-#define buffer_h
 
-#include "Arduino.h"
 
 
 // This method initializes the datastore of the buffer to a certain sizem the buffer should NOT be used before this call is made
-void init(unsigned int buf_size);
+void init_buffer(unsigned int buf_size);
 
 // This method resets the buffer into an original state (with no data)
 void clear();
@@ -28,8 +26,10 @@ int put(byte in);
 byte get();
 //deletes data
 byte getFromBack();
-
+uint8_t getSize();
 int getInt();
+
+
 
 
 byte* data;
@@ -38,4 +38,4 @@ unsigned int capacity;
 unsigned int position;
 unsigned int current_size;
 
-#endif
+
